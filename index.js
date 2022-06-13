@@ -20,6 +20,7 @@ const setBackground = (url,canvas)=>{
     // backgroundVpt = false,
     // width= canvas.width
     // height= canvas.height,
+    // img.objectCaching = false
 
 
 
@@ -68,11 +69,11 @@ const setPanEvents = (canvas)=>{
      
      canvas.on("mouse:down",(event)=>{
          mousePressed=true
-         let evt = event.e
+         let e = event.e
          if (currentMode === modes.pan){
-         canvas.setCursor('crosshair')
-         this.lastPosX = evt.clientX
-         this.lastPosY = evt.clientY
+         canvas.setCursor('default')
+         this.lastPosX = e.clientX
+         this.lastPosY = e.clientY
          canvas.renderAll()
          }
      })
@@ -81,41 +82,41 @@ const setPanEvents = (canvas)=>{
      canvas.on("mouse:up",(event)=>{
          mousePressed=false
          canvas.setCursor('default')
-         this.isDragging=false
+        mousePressed=false
          this.selection = true
          canvas.renderAll()
      })
+
+   
      
 
      canvas.on('mouse:wheel', (event)=> {
-        const canvCenter = canvas.getCenter();
+        // const canvCenter = canvas.getCenter();
 
          if(mousePressed==false && currentMode === modes.zoom){
             canvas.setCursor('crosshair')
-        var zooming = event.e.deltaY;
-        var zoom = canvas.getZoom();
-        
-        zoom *= 0.999 ** zooming;
-        
-        if (zoom > 1) zoom = 1;
-        if (zoom < 0.01) zoom = 0.01;
-        canvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
-        event.e.preventDefault();
-        event.e.stopPropagation();
-        var vpt = this.viewportTransform;
-        if (zoom < 400 / 1000) {
-          vpt[4] = 200 - 1000 * zoom / 2;
-          vpt[5] = 200 - 1000 * zoom / 2;
-        } else {
-          if (vpt[4] >= 0) {
-            vpt[4] = 0;
-          } else if (vpt[4] < canvas.getWidth() - 1000 * zoom) {
-            vpt[4] = canvas.getWidth() - 1000 * zoom;
-          }
-          if (vpt[5] >= 0) {
-            vpt[5] = 0;
-          } else if (vpt[5] < canvas.getHeight() - 1000 * zoom) {
-            vpt[5] = canvas.getHeight() - 1000 * zoom;
+            var zooming = event.e.deltaY;
+            var zoom = canvas.getZoom();
+            zoom *= 0.999 ** zooming;
+            if (zoom > 20) zoom = 20;
+            if (zoom < 0.1) zoom = 0.1;
+            canvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
+            event.e.preventDefault();
+            event.e.stopPropagation();
+            var vpt = this.viewportTransform;
+            if (zoom < 400 / 1000) {
+              vpt[4] = 200 - 1000 * zoom / 2;
+              vpt[5] = 200 - 1000 * zoom / 2;
+            } else {
+              if (vpt[4] >= 0) {
+                vpt[4] = 0;
+              } else if (vpt[4] < canvas.getWidth() - 1000 * zoom) {
+                vpt[4] = canvas.getWidth() - 1000 * zoom;
+              }
+              if (vpt[5] >= 0) {
+                vpt[5] = 0;
+              } else if (vpt[5] < canvas.getHeight() - 1000 * zoom) {
+                vpt[5] = canvas.getHeight() - 1000 * zoom;
           }
          }
          
